@@ -1,0 +1,38 @@
+apply plugin: 'java-library'
+
+group 'com.tygrash'
+version '1.0.0'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:22.0'
+
+    compile group: 'org.apache.kafka', name: 'kafka-clients', version: '0.11.0.1'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+
+    compileOnly "org.projectlombok:lombok:1.16.18"
+
+    testImplementation 'junit:junit:4.12'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+}
+
+test {
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+    testLogging {
+        exceptionFormat "full"
+        events "passed", "skipped", "failed"
+    }
+}
+
+def mainClassName = "com.tygrash.launch.Main"
+
+task run(type: JavaExec) {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+}
